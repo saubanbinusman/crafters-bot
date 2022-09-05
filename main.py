@@ -1,29 +1,22 @@
+from ast import parse
 import os
-import textract
+import json
 
+BASE = "data/"
 
+file_names = os.listdir(BASE)
 
-file_names = os.listdir("data")
+with open(BASE + file_names[0]) as file_handle:
+    file_json = file_handle.read()
 
-text = textract.process('data/book1.pdf', method='tesseract')
+parsed_json = json.loads(file_json)
 
-print(text)
+count = 0
 
-# pdfFileObj = open('data/book1.pdf', 'rb')
-#
-# # creating a pdf reader object
-# pdfReader = PyPDF3.PdfFileReader(pdfFileObj)
-#
-# # printing number of pages in pdf file
-# print(pdfReader.numPages)
-#
-# # creating a page object
-# pageObj = pdfReader.getPage(100)
-#
-# # extracting text from page
-# okay = pageObj.extractText()
-# escaped = re.escape(okay)
-# print(okay)
-#
-# # closing the pdf file object
-# pdfFileObj.close()
+for page in parsed_json["pages"]:
+    for element in page["elements"]:
+        if element and element["type"] == "paragraph":
+            for paragraph_content in element["content"]:
+                for word in paragraph_content["content"]:
+                    print(word["content"], end=" ")
+            print("\n\n")
