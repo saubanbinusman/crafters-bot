@@ -24,7 +24,7 @@ def extract_paragraphs(json_input):
 def main():
     file_names = os.listdir(DATA_BASE_PATH)
 
-    with open(DATA_BASE_PATH + file_names[0]) as file_handle:
+    with open(DATA_BASE_PATH + file_names[0], encoding="utf-8-bom") as file_handle:
         file_json = file_handle.read()
 
     parsed_json = json.loads(file_json)
