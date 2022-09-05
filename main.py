@@ -1,7 +1,8 @@
 import os
 import json
 
-DATA_BASE_PATH = "data/"
+INPUT_PATH = "data/"
+OUTPUT_PATH = "output/"
 
 # Returns list of paragraph tuples (word_count, paragraph text)
 def extract_paragraphs(json_input):
@@ -22,9 +23,9 @@ def extract_paragraphs(json_input):
     return paragraphs
 
 def main():
-    file_names = os.listdir(DATA_BASE_PATH)
+    file_names = list(filter(lambda file_name: file_name.endswith(".json"), os.listdir(INPUT_PATH)))
 
-    with open(DATA_BASE_PATH + file_names[0]) as file_handle:
+    with open(INPUT_PATH + file_names[0]) as file_handle:
         file_json = file_handle.read()
 
     parsed_json = json.loads(file_json)
@@ -38,7 +39,7 @@ def main():
     output_json = list(map(lambda p: {"word_count": p[0], "value": p[1]}, cleaned_paragraphs))
     output_json_str = json.dumps(output_json, indent=4)
 
-    with open(DATA_BASE_PATH + F"{file_names[0]}_output.json", "w", encoding="utf-8") as file_handle:
+    with open(OUTPUT_PATH + F"{file_names[0]}", "w", encoding="utf-8") as file_handle:
         file_handle.write(output_json_str)
 
     # Sample output
