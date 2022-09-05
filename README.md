@@ -10,7 +10,7 @@ We are going to break things down into following steps
 3. Take input on topics to filter on
 
 ## Workflow
-1. Run [Parsr|https://github.com/axa-group/Parsr] locally (the README is easy to follow).
+1. Run [Parsr](https://github.com/axa-group/Parsr) locally (the README is easy to follow).
 2. Convert PDF to JSON using Parsr's UI on localhost. Turn off all the modules except the following:
     - header-footer-detection
     - words-to-line-new
