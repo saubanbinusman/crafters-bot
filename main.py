@@ -1,15 +1,7 @@
-from ast import parse
 import os
 import json
 
-BASE = "data/"
-
-file_names = os.listdir(BASE)
-
-with open(BASE + file_names[0]) as file_handle:
-    file_json = file_handle.read()
-
-parsed_json = json.loads(file_json)
+DATA_BASE_PATH = "data/"
 
 # Returns list of paragraph tuples (word_count, paragraph text)
 def extract_paragraphs(json_input):
@@ -29,18 +21,28 @@ def extract_paragraphs(json_input):
     
     return paragraphs
 
+def main():
+    file_names = os.listdir(DATA_BASE_PATH)
 
-# Sort the paragraphs by their word_count, highest word count paragraphs first
-paragraphs_sorted_by_word_count = sorted(extract_paragraphs(parsed_json), key=lambda kvp: kvp[0], reverse=True)
+    with open(DATA_BASE_PATH + file_names[0]) as file_handle:
+        file_json = file_handle.read()
 
-# Filter the lines from table of contents (it has a lot of dots, which AI counts as words :|, so skip those lines)
-cleaned_paragraphs = list(filter(lambda p: p[1].count(".") < 0.25 * p[0], paragraphs_sorted_by_word_count))
+    parsed_json = json.loads(file_json)
 
-output_json = list(map(lambda p: {"word_count": p[0], "value": p[1]}, cleaned_paragraphs))
-output_json_str = json.dumps(output_json, indent=4)
+    # Sort the paragraphs by their word_count, highest word count paragraphs first
+    paragraphs_sorted_by_word_count = sorted(extract_paragraphs(parsed_json), key=lambda kvp: kvp[0], reverse=True)
 
-with open(BASE + "output.json", "w", encoding="utf-8") as file_handle:
-    file_handle.write(output_json_str)
+    # Filter the lines from table of contents (it has a lot of dots, which AI counts as words :|, so skip those lines)
+    cleaned_paragraphs = list(filter(lambda p: p[1].count(".") < 0.25 * p[0], paragraphs_sorted_by_word_count))
 
-# Sample output
-print(json.dumps(output_json[:100], indent=4))
+    output_json = list(map(lambda p: {"word_count": p[0], "value": p[1]}, cleaned_paragraphs))
+    output_json_str = json.dumps(output_json, indent=4)
+
+    with open(DATA_BASE_PATH + F"{file_names[0]}_output.json", "w", encoding="utf-8") as file_handle:
+        file_handle.write(output_json_str)
+
+    # Sample output
+    print(json.dumps(output_json[:100], indent=4))
+
+if __name__ == "__main__":
+    main()
